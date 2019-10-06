@@ -1,20 +1,32 @@
-cabal-version:       2.4
-name:                utreexo
-version:             0.1.0
-synopsis:            An implementation of the Utreexo accumulator
-homepage:            https://github.com/GambolingPangolin/utreexo
-license:             ISC
-license-file:        LICENSE
-author:              Ian Shipman
-maintainer:          ics@gambolingpangolin.com
-category:            Data
-build-type:          Simple
-extra-source-files:  CHANGELOG.md
+cabal-version:          2.4
+name:                   utreexo
+version:                1.0.0
+synopsis:               An implementation of the Utreexo accumulator
+homepage:               https://github.com/GambolingPangolin/utreexo
+license:                ISC
+license-file:           LICENSE
+author:                 Ian Shipman
+maintainer:             ics@gambolingpangolin.com
+category:               Data
+build-type:             Simple
+extra-source-files:     CHANGELOG.md
 
-library
-  hs-source-dirs:      src
-  default-language:    Haskell2010
-  exposed-modules:
-    Crypto.Utreexo
+common core
+  default-language:     Haskell2010
   build-depends:
     base                                >=4.12              && <4.13
+
+library
+  import:               core
+  hs-source-dirs:       src
+  exposed-modules:
+    Crypto.Utreexo
+    Data.HashTree
+
+test-suite utreexo-tests
+  import:               core
+  type:                 exitcode-stdio-1.0
+  main-is:              test/Main.hs
+  build-depends:
+      utreexo
+    , hspec                             >=2.7               && <2.8
