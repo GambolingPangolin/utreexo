@@ -22,8 +22,9 @@ module Crypto.Utreexo
     , verify
     , getProofs
 
-      -- * Mutation API
+      -- * Utreexo API
 
+    , member
     , append
     , accumulate
     , delete
@@ -90,6 +91,15 @@ forestSize (Utreexo n _) = (+ 1) . floor . logBase 2 $ fromIntegral n
 -- | Construct proofs for all value nodes in the accumulator
 getProofs :: Hash h a => Utreexo h a -> [Proof h a]
 getProofs (Utreexo _ ts) = fmap Proof $ catMaybes ts >>= HT.getLeaves
+
+
+-- | Test for membership in an accumulator
+member :: (Eq h, Hash h a, Semigroup h) => Utreexo h a -> Proof h a -> Bool
+member (Utreexo _ ts) p
+    | Just t <- ts !! fromIntegral (itemSubtreeIndex p)
+    = verify (hash t) p
+
+    | otherwise = False
 
 
 -- | Add a value node to the accumulator

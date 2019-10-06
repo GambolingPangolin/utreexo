@@ -49,11 +49,17 @@ hs1 = [ Nothing
 
 main :: IO ()
 main = hspec $ do
+
+    let ps  = getProofs u0
+        p10 = ps !! 89
+
     describe "contents" $ do
         it "should have 99 elements"                $ count u0     `shouldBe` 99
         it "should have 120 elements"               $ count u1     `shouldBe` 120
         it "should have the correct contents"       $ getValues u0 `shouldBe` [1 .. 99]
-        it "should still have the correct contents" $ getValues u1 `shouldBe` [1 .. 99]
+        it "should contain '10'"                    $ member u0 p10
+        it "should have the correct contents after additions" $
+            getValues u1 `shouldBe` [1 .. 99]
 
     describe "structure" $ do
         it "should have the correct hashes"       $ hashes u0 `shouldBe` hs0
@@ -61,10 +67,8 @@ main = hspec $ do
 
     describe "deletion" $ do
 
-        let ps  = getProofs u0
+        let p1  = last ps
             p99 = head ps
-            p1  = last ps
-            p10 = ps !! 89
 
         describe "99 values" $ do
             it "should delete the first element" $ (getValues <$> delete p99 u0) `shouldBe` Just [1 .. 98]
@@ -83,3 +87,4 @@ main = hspec $ do
             it "should delete an intermediate element"      $ (getValues <$> u2) `shouldBe` Just [1 .. 98]
             it "should delete another intermediate element" $
                 (getValues <$> u3) `shouldBe` Just ([1 .. 60] <> [62 .. 98])
+            it "should not contain '61'"                    $ (member <$> u3 <*> pure p61) `shouldBe` Just False
