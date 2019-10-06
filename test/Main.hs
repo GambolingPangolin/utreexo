@@ -14,12 +14,12 @@ instance Hash [a] a where
     hash = pure
 
 
-accumulateMany :: (Hash h a, Semigroup h) => Utreexo h a -> [a] -> Utreexo h a
-accumulateMany = L.foldl' accumulate
+insertManyImplicit :: (Hash h a, Semigroup h) => Utreexo h a -> [a] -> Utreexo h a
+insertManyImplicit = L.foldl' insertValueImplicit
 
 
-appendMany :: (Hash h a, Semigroup h) => Utreexo h a -> [a] -> Utreexo h a
-appendMany = L.foldl' append
+insertMany :: (Hash h a, Semigroup h) => Utreexo h a -> [a] -> Utreexo h a
+insertMany = L.foldl' insertValue
 
 
 getValues :: (Hash h a, Ord a) => Utreexo h a -> [a]
@@ -31,8 +31,8 @@ rangeDec x y = reverse $ enumFromTo y x
 
 
 u0, u1 :: Utreexo [Int] Int
-u0 = appendMany emptyUtreexo [1 .. 99]
-u1 = accumulateMany u0 [100 .. 120]
+u0 = insertMany emptyUtreexo [1 .. 99]
+u1 = insertManyImplicit u0 [100 .. 120]
 
 
 hs0, hs1 :: [Maybe [Int]]

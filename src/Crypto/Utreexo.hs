@@ -25,8 +25,8 @@ module Crypto.Utreexo
       -- * Utreexo API
 
     , member
-    , append
-    , accumulate
+    , insertValue
+    , insertValueImplicit
     , delete
     ) where
 
@@ -69,7 +69,7 @@ data Utreexo h a
     } deriving (Eq, Show)
 
 
--- | Retrieve the list of Merkle roots representing the current accumulator state
+-- | Retrieve the list of Merkle roots representing the current accumulator state.  The ordering is "little endian" in the sense that the list begins with the Merkle root of the tree with one element, and increases as powers of two, going into the tail.
 hashes :: (Hash h a, Semigroup h) => Utreexo h a -> [Maybe h]
 hashes = fmap (fmap hash) . trees
 
@@ -103,14 +103,14 @@ member (Utreexo _ ts) p
 
 
 -- | Add a value node to the accumulator
-append :: (Hash h a, Semigroup h) => Utreexo h a -> a -> Utreexo h a
-append (Utreexo n ts) x = Utreexo (n + 1) $ insertNode (HT.leaf x) ts
+insertValue :: (Hash h a, Semigroup h) => Utreexo h a -> a -> Utreexo h a
+insertValue (Utreexo n ts) x = Utreexo (n + 1) $ insertNode (HT.leaf x) ts
 
 
 -- | Add a value to the accumulator without creating a value node.  (It will
 -- not be possible to update inclusion proofs for this value.)
-accumulate :: (Hash h a, Semigroup h) => Utreexo h a -> a -> Utreexo h a
-accumulate (Utreexo n ts) x = Utreexo (n + 1) $ insertNode (HT.hashNode x) ts
+insertValueImplicit :: (Hash h a, Semigroup h) => Utreexo h a -> a -> Utreexo h a
+insertValueImplicit (Utreexo n ts) x = Utreexo (n + 1) $ insertNode (HT.hashNode x) ts
 
 
 insertNode
