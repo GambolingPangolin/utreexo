@@ -2,9 +2,10 @@ cabal-version:          2.4
 name:                   utreexo
 version:                1.0.0
 synopsis:               An implementation of the Utreexo accumulator
-homepage:               https://github.com/GambolingPangolin/utreexo
-license:                ISC
+homepage:               https://github.com/bitnomial/utreexo
+license:                BSD-3-Clause
 license-file:           LICENSE
+copyright:              Bitnomial, Inc. (c) 2020
 author:                 Ian Shipman
 maintainer:             ics@gambolingpangolin.com
 category:               Data
